@@ -216,8 +216,53 @@ O projeto exige que o usuário utilize suas próprias chaves gratuitas:
 </div>
 
 ---
+## 🔄 4. Fluxo de Execução
 
-## 🔄 4. Aplicação do Processo ETL
+O sistema opera através de um pipeline sequencial orquestrado pelo arquivo principal. Abaixo, detalhamos como os módulos interagem desde a inicialização até a entrega da análise.
+
+### Diagrama de Arquitetura
+
+```mermaid
+graph TD
+    %% Inicialização e Configuração
+    Start([Início: python main.py]) --> Config[config.py: Carrega .env e API Keys]
+    Config --> Menu{Menu Principal}
+    
+    %% Fluxo Opção 1: Análise de Ação
+    Menu -->|1. Analisar Ação| Input[/Input: Símbolo da Ação/]
+    Input --> Fetch[data_fetcher.py: Busca Dados<br/>na Alpha Vantage]
+    
+    Fetch -->|Dados OK| Process[processing.py: Calcula<br/>Indicadores SMA/RSI]
+    Fetch -->|Erro| Menu
+    
+    Process --> Vis[visualizer.py: Exibe<br/>Tabela e Gráficos]
+    Vis --> AI[ai_services.py: Gera<br/>Parecer com Gemini]
+    AI --> Menu
+    
+    %% Fluxo Opção 2: Chat Financeiro
+    Menu -->|2. Assistente Financeiro| ChatInput[/Input: Pergunta do Usuário/]
+    ChatInput --> ChatValid[ai_services.py: Valida<br/>Tópico e Responde]
+    ChatValid --> Menu
+    
+    %% Encerramento
+    Menu -->|3. Sair| End([Fim])
+    
+    %% Estilização do Gráfico
+    style Start fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff
+    style End fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style Menu fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style AI fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    style ChatValid fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    style Fetch fill:#f1c40f,stroke:#f39c12,stroke-width:2px,color:#2c3e50
+    style Config fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff
+    style Input fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+    style ChatInput fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+```
+**⚠️Observação:** Devido às limitações do plano gratuito da Alpha Vantage, a análise da IA é **exclusivamente voltada ao longo prazo**, evitando interpretações de curtíssimo prazo que exigiriam dados intradiários mais avançados.
+
+---
+
+## 🔄 5. Aplicação do Processo ETL
 
 O coração deste projeto está na aplicação prática do processo **ETL (Extract, Transform, Load)**, que foi estruturado de forma clara, organizada e próxima de um ambiente real de dados no mercado financeiro.
 
@@ -228,7 +273,7 @@ Cada etapa foi pensada para garantir:
 
 ---
 
-### 4.1 Como o processo de extração foi aplicado?
+### 5.1 Como o processo de extração foi aplicado?
 
 <div style="background-color:#eef2f7; padding:15px; border-radius:10px;">
 O núcleo do projeto é a aplicação real do processo <strong>ETL (Extract, Transform, Load)</strong>, garantindo qualidade dos dados, confiabilidade das análises e integração eficiente com IA.
@@ -236,7 +281,7 @@ O núcleo do projeto é a aplicação real do processo <strong>ETL (Extract, Tra
 
 ---
 
-### 4.1.1 Limitações da API Alpha Vantage no Plano Gratuito
+### 5.1.1 Limitações da API Alpha Vantage no Plano Gratuito
 
 A escolha da Alpha Vantage foi feita de forma estratégica para simular um cenário real de restrições de dados no mercado. No plano gratuito, a API apresenta as seguintes limitações:
 
@@ -249,7 +294,7 @@ Essas limitações foram um fator decisivo para que a **análise fosse direciona
 
 ---
 
-### 4.2 Como o processo de transformação foi desenvolvido?
+### 5.2 Como o processo de transformação foi desenvolvido?
 
 Após a extração, os dados passam pela etapa mais crítica do projeto: **a transformação dos dados**. Esta fase é essencial para garantir que a IA receba informações limpas, organizadas e confiáveis.
 
@@ -276,7 +321,7 @@ Por isso, toda a transformação foi pensada para garantir que a IA consiga **in
 
 ---
 
-### 4.3 Como os dados foram carregados? Qual foi o resultado obtido?
+### 5.3 Como os dados foram carregados? Qual foi o resultado obtido?
 
 Após a etapa de transformação, os dados tratados são carregados para a **Inteligência Artificial (Gemini)**, que passa a receber um conjunto de informações estruturadas sobre a ação escolhida pelo usuário.
 
@@ -294,8 +339,6 @@ Com base nessas informações, a IA gera uma **análise em linguagem natural**, 
 #### 📊 Indicadores abordados durante a análise
 
 Durante a análise, alguns **indicadores técnicos** são utilizados como apoio para interpretar o comportamento da ação. Abaixo está uma explicação simplificada dos principais.
-
----
 
 ✅ **RSI (Índice de Força Relativa)**
 
@@ -346,18 +389,71 @@ Tudo isso é apresentado de forma acessível, mesmo para pessoas que nunca tiver
 
 ---
 
-## 🧠 5. Foco das Análises
+## 🎥 6. Demonstração do Projeto
 
-Devido às limitações do plano gratuito da Alpha Vantage, a análise da IA é **exclusivamente voltada ao longo prazo**, evitando interpretações de curtíssimo prazo que exigiriam dados intradiários mais avançados.
+### 6.1 Execução do Programa
+https://github.com/user-attachments/assets/d342fd90-2467-4171-b79f-a46c4e4b9e44
+
+### 6.2 Visualizações geradas em conjunto com análise da ação escolhida
+![Image](https://github.com/user-attachments/assets/0aff57c1-fd9a-46ab-8a97-be774a46e1dc)
+
+---
+## 🚀 7. Guia de Configuração e Execução
+
+Este guia detalha o processo para configurar e executar o Consultor Financeiro AI em sua máquina.
+
+### 7.1 Pré-requisitos Essenciais 💻
+
+Certifique-se de ter o **Python 3** instalado em seu sistema operacional.
 
 ---
 
-## 🎥 6. Demonstração do Projeto
+### 7.2 Preparação do Ambiente
 
-<div align="center">
-  <p><strong>Em breve será incluído aqui um vídeo demonstrando o funcionamento completo do sistema.</strong></p>
-</div>
+#### A. Criação e Ativação do Ambiente Virtual (Recomendado)
 
+```bash
+# Cria o ambiente virtual
+python -m venv venv
+
+# Ativação do ambiente (macOS/Linux)
+source venv/bin/activate
+
+# Ativação do ambiente (Windows)
+venv\Scripts\activate
+```
+
+#### B. Instalação das Bibliotecas Necessárias
+Instale as dependências externas do projeto com o seguinte comando:
+
+```bash
+pip install pandas requests python-dotenv google-genai matplotlib
+```
+
+### 7.3 Obtenção e Configuração das Chaves de API 🔑
+O sistema requer duas chaves de API.
+
+#### A. Obtenha Suas Chaves
+API Alpha Vantage: Obtenha sua chave no site da Alpha Vantage.
+
+API Google Gemini: Obtenha sua chave de API do Gemini no Google AI Studio.
+
+#### B. Criação do Arquivo ```.env```
+Crie um arquivo chamado ```.env``` no diretório raiz do projeto e insira as chaves obtidas, substituindo os valores de exemplo:
+
+```bash
+# Chave para buscar dados financeiros
+API_KEY_ALPHA="SUA_CHAVE_ALPHA_VANTAGE_AQUI"
+
+# Chave para o modelo de IA do Google Gemini
+API_KEY_GEMINI="SUA_CHAVE_GEMINI_AQUI"
+```
+
+### 7.4 Execução do Sistema ▶️
+Com o ambiente ativo e as chaves no lugar, execute o arquivo principal:
+```bash
+python main.py
+```
 ---
 
 ## 📬 Contato
@@ -375,3 +471,4 @@ Devido às limitações do plano gratuito da Alpha Vantage, a análise da IA é 
   <h3>📌 Projeto desenvolvido no contexto do bootcamp "Santander 2025 - Ciência de Dados com Python"</h3>
   <p>DIO + Santander</p>
 </div>
+
