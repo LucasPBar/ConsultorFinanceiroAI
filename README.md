@@ -155,7 +155,7 @@ O objetivo central é **demonstrar, na prática, todas as etapas de um processo 
 
 O sistema possui **dois modos de operação**:
 
----
+<div style="background-color:#f6f8fa; padding:15px; border-radius:10px;">
 
 ### 🔹 Modo 1 – Análise Automatizada de Ações
 
@@ -166,7 +166,7 @@ O usuário informa o código de uma ação americana (como AAPL, TSLA, MSFT) e o
 3. Envio dos dados para a IA  
 4. Retorno de um **resumo estratégico voltado ao longo prazo**
 
----
+<div style="background-color:#f6f8fa; padding:15px; border-radius:10px;">
 
 ### 🔹 Modo 2 – Assistente de Investimentos
 
@@ -454,6 +454,21 @@ Com o ambiente ativo e as chaves no lugar, execute o arquivo principal:
 ```bash
 python main.py
 ```
+## 📂 Estrutura do Projeto
+
+```bash
+├── .git/
+├── __pycache__/
+├── .env
+├── ai_services.py
+├── config.py
+├── data_fetcher.py
+├── main.py
+├── processing.py
+├── README.md
+└── visualizer.py
+```
+
 ---
 
 ## 📬 Contato
@@ -471,4 +486,5 @@ python main.py
   <h3>📌 Projeto desenvolvido no contexto do bootcamp "Santander 2025 - Ciência de Dados com Python"</h3>
   <p>DIO + Santander</p>
 </div>
+
 
